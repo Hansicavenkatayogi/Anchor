@@ -22,8 +22,8 @@ export function TopBar() {
     <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 sticky top-0 z-10">
       <div>
         <h1 className="text-xl font-bold text-[#2C2C2A]">{getPageTitle()}</h1>
-        {pathname === "/dashboard" && (session?.user as any)?.city && (
-          <p className="text-xs text-[#888780]">{(session?.user as any).city} · Updated just now</p>
+        {pathname === "/dashboard" && session?.user?.city && (
+          <p className="text-xs text-[#888780]">{session.user.city} · Updated just now</p>
         )}
       </div>
 

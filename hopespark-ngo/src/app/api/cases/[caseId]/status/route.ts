@@ -17,9 +17,10 @@ export async function GET(req: Request, { params }: { params: { caseId: string }
       status: data.status,
       statusLabel: data.status_label,
       statusProgress: data.status_progress,
-      assignedNGO: (data.ngo_organizations as any)?.name || null,
+      assignedNGO: (data.ngo_organizations as { name?: string })?.name || null,
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

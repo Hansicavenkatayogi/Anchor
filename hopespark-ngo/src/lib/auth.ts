@@ -1,6 +1,11 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { supabaseAdmin } from "./supabase";
+
+interface Credentials {
+  email: string;
+  password: string;
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -10,7 +15,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials: Credentials | undefined) {
         // Find user by email in ngo_users
         const { data: user, error } = await supabaseAdmin
           .from("ngo_users")
@@ -40,7 +45,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }) {
       if (user) {
         token.orgId = user.orgId;
         token.city = user.city;
@@ -50,13 +55,13 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }: any) {
+    async session({ session, token }) {
       if (token) {
-        session.user.orgId = token.orgId;
-        session.user.city = token.city;
-        session.user.state = token.state;
-        session.user.role = token.role;
-        session.user.id = token.id;
+        session.user.orgId = token.orgId as string;
+        session.user.city = token.city as string;
+        session.user.state = token.state as string;
+        session.user.role = token.role as string;
+        session.user.id = token.id as string;
       }
       return session;
     },

@@ -6,7 +6,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 export async function PATCH(req: Request, { params }: { params: { offerId: string } }) {
   try {
     const session = await getServerSession(authOptions);
-    const user = session?.user as any;
+    const user = session?.user;
     if (!session || !user || !user.orgId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -19,7 +19,7 @@ export async function PATCH(req: Request, { params }: { params: { offerId: strin
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const updates: any = { status };
+    const updates: Record<string, any> = { status };
     if (status === 'delivered') {
       updates.delivered_at = new Date().toISOString();
     }
@@ -47,7 +47,8 @@ export async function PATCH(req: Request, { params }: { params: { offerId: strin
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
