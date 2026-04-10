@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String        @id @default(cuid())
+  username     String?       @unique
+  password     String?
+  isAnonymous  Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  moodLogs     MoodLog[]
+  helpRequests HelpRequest[]
+}
+
+model MoodLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  mood      String   // Happy, Sad, Stressed, Angry
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model HelpRequest {
+  id           String   @id @default(cuid())
+  userId       String?
+  name         String?
+  age          Int?
+  description  String
+  category     String   // Education, Financial, Emotional, Other
+  status       String   @default("Pending") // Pending, Reviewed, Resolved
+  consentGiven Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id])
+}

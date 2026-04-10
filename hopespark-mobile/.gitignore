@@ -1,0 +1,22 @@
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Environment variables — NEVER commit this
+.env
+.env.local
+.env.*
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
